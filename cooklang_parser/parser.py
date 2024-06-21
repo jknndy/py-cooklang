@@ -37,6 +37,11 @@ class CooklangParser:
             match = re.match(r'^\s*--\s*(.+)', line)
             if match:
                 comments.append({'type': 'comment', 'name': match.group(1).strip()})
+        
+        block_comments = re.findall(r'\[-(.*?)\-\]', text, re.DOTALL)
+        for comment in block_comments:
+            comments.append({'type': 'comment', 'name': comment.strip()})
+        
         return comments
 
     def extract_metadata(self, text):

@@ -559,6 +559,7 @@ def test_custom(parser):
             {'name': 'syrup', 'quantity': '1/2', 'unit': 'tbsp'},
         ],
         'cookware': ['pot'],
+        'images': [],
         'steps': [
             [
                 {'type': 'text', 'value': 'Poke holes in'},
@@ -593,8 +594,10 @@ def test_custom(parser):
         'timers': [('eggs', '3%minutes')],
         'conditions': [],
         'substitutions': [],
-        'comments': [{'type': 'comment', 'name': 'This is a comment'}],
-        'images': []
+        'comments': [
+            {'type': 'comment', 'name': 'This is a comment'},
+            {'type': 'comment', 'name': 'TODO change units to litres'}
+        ]
     }
     result = parser.parse_recipe(text)
     assert result == expected, f"Failed. Result: {result['comments']}, Expected: {expected['comments']}"
