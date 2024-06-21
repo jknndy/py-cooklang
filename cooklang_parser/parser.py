@@ -5,24 +5,16 @@ class CooklangParser:
     def parse_recipe(self, recipe_text):
         comments = self.extract_comments(recipe_text)
         recipe_text = self.remove_comments(recipe_text)
-        metadata = self.extract_metadata(recipe_text)
-        ingredients = self.extract_ingredients(recipe_text)
-        cookware = self.extract_cookware(recipe_text)
-        steps = self.extract_steps(recipe_text)
-        timers = self.extract_timers(recipe_text)
-        conditions = self.extract_conditions(recipe_text)
-        substitutions = self.extract_ingredient_substitutions(recipe_text)
-        images = self.extract_images(recipe_text)
         return {
-            "metadata": metadata,
-            "ingredients": ingredients,
-            "cookware": cookware,
-            "steps": steps,
-            "timers": timers,
-            "conditions": conditions,
-            "substitutions": substitutions,
+            "metadata": self.extract_metadata(recipe_text),
+            "ingredients": self.extract_ingredients(recipe_text),
+            "cookware": self.extract_cookware(recipe_text),
+            "steps": self.extract_steps(recipe_text),
+            "timers": self.extract_timers(recipe_text),
+            "conditions": self.extract_conditions(recipe_text),
+            "substitutions": self.extract_ingredient_substitutions(recipe_text),
             "comments": comments,
-            "images": images
+            "images": self.extract_images(recipe_text)
         }
 
     def remove_comments(self, text):
