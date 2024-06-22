@@ -1,9 +1,11 @@
 import pytest
 from cooklang_parser.parser import CooklangParser
 
+
 @pytest.fixture
 def parser():
     return CooklangParser()
+
 
 # Test case to check the full parsing of a recipe including metadata, ingredients, cookware, steps, timers, conditions, and substitutions
 def test_parse_recipe_full(parser):
@@ -29,75 +31,52 @@ def test_parse_recipe_full(parser):
             {"name": "spaghetti", "quantity": None, "unit": None},
         ],
         "cookware": ["pan"],
-        "images": [{'description': 'A delicious dish', 'path': 'images/dish.jpg'}],
+        "images": [{"description": "A delicious dish", "path": "images/dish.jpg"}],
         "steps": [
+            {"type": "ingredient", "name": "spaghetti", "quantity": "200", "unit": "g"},
             {
-                "type": "ingredient", "name": "spaghetti", "quantity": "200", "unit": "g"
+                "type": "ingredient",
+                "name": "ground beef",
+                "quantity": "300",
+                "unit": "g",
             },
+            {"type": "cookware", "name": "pan"},
+            {"type": "timer", "name": "", "duration": "10%minutes"},
             {
-                "type": "ingredient", "name": "ground beef", "quantity": "300", "unit": "g"
+                "type": "text",
+                "value": "This is a test recipe with an image ![A delicious dish](images/dish.jpg)",
             },
-            {
-                "type": "cookware", "name": "pan"
-            },
-            {
-                "type": "timer", "name": "", "duration": "10%minutes"
-            },
-            {
-                "type": "text", "value": "This is a test recipe with an image ![A delicious dish](images/dish.jpg)"
-            },
-            {
-                "type": "text", "value": "Cook"
-            },
-            {
-                "type": "ingredient", "name": "spaghetti", "quantity": "200", "unit": "g"
-            },
-            {
-                "type": "text", "value": "in boiling water for"
-            },
-            {
-                "type": "timer", "name": "", "duration": "10%minutes"
-            },
-            {
-                "type": "text", "value": "."
-            },
-            {
-                "type": "text", "value": "If"
-            },
-            {
-                "type": "ingredient", "name": "spaghetti", "quantity": None, "unit": None
-            },
-            {
-                "type": "text", "value": "is cooked, drain the water."
-            },
-            {
-                "type": "text", "value": "Use"
-            },
-            {
-                "type": "ingredient", "name": "butter", "quantity": "50", "unit": "g"
-            },
-            {
-                "type": "text", "value": "(or"
-            },
-            {
-                "type": "ingredient", "name": "margarine", "quantity": "50", "unit": "g"
-            },
-            {
-                "type": "text", "value": ") for frying."
-            }
+            {"type": "text", "value": "Cook"},
+            {"type": "ingredient", "name": "spaghetti", "quantity": "200", "unit": "g"},
+            {"type": "text", "value": "in boiling water for"},
+            {"type": "timer", "name": "", "duration": "10%minutes"},
+            {"type": "text", "value": "."},
+            {"type": "text", "value": "If"},
+            {"type": "ingredient", "name": "spaghetti", "quantity": None, "unit": None},
+            {"type": "text", "value": "is cooked, drain the water."},
+            {"type": "text", "value": "Use"},
+            {"type": "ingredient", "name": "butter", "quantity": "50", "unit": "g"},
+            {"type": "text", "value": "(or"},
+            {"type": "ingredient", "name": "margarine", "quantity": "50", "unit": "g"},
+            {"type": "text", "value": ") for frying."},
         ],
         "timers": [("", "10%minutes"), ("", "10%minutes")],
         "conditions": [
-            {"ingredient": "spaghetti", "condition": "cooked", "action": "drain the water"}
+            {
+                "ingredient": "spaghetti",
+                "condition": "cooked",
+                "action": "drain the water",
+            }
         ],
         "substitutions": [
             {
                 "primary": {"name": "butter", "quantity": "50", "unit": "g"},
-                "substitute": {"name": "margarine", "quantity": "50", "unit": "g"}
+                "substitute": {"name": "margarine", "quantity": "50", "unit": "g"},
             }
-        ]
+        ],
     }
     assert parser.parse_recipe(text) == expected
+
 
 def test_complex_recipe(parser):
     text = """
@@ -118,7 +97,7 @@ def test_complex_recipe(parser):
         "metadata": {
             "title": "Spaghetti Carbonara",
             "servings": "4",
-            "author": "John Doe"
+            "author": "John Doe",
         },
         "ingredients": [
             {"name": "bacon", "quantity": "150", "unit": "g"},
@@ -130,162 +109,64 @@ def test_complex_recipe(parser):
             {"name": "parsley", "quantity": None, "unit": None},
             {"name": "salt", "quantity": None, "unit": None},
             {"name": "spaghetti", "quantity": "400", "unit": "g"},
-            {"name": "spaghetti", "quantity": None, "unit": None}
+            {"name": "spaghetti", "quantity": None, "unit": None},
         ],
         "cookware": ["large bowl", "pan"],
         "steps": [
+            {"type": "text", "value": "Cook"},
+            {"type": "ingredient", "name": "spaghetti", "quantity": "400", "unit": "g"},
+            {"type": "text", "value": "in boiling water until al dente."},
+            {"type": "text", "value": "In a"},
+            {"type": "cookware", "name": "large bowl"},
+            {"type": "text", "value": ", beat"},
+            {"type": "ingredient", "name": "eggs", "quantity": "4", "unit": None},
+            {"type": "text", "value": "and mix with"},
             {
-                "type": "text", 
-                "value": "Cook"
+                "type": "ingredient",
+                "name": "parmesan cheese",
+                "quantity": "100",
+                "unit": "g",
             },
+            {"type": "text", "value": "."},
+            {"type": "text", "value": "Fry"},
+            {"type": "ingredient", "name": "bacon", "quantity": "150", "unit": "g"},
+            {"type": "text", "value": "in a"},
+            {"type": "cookware", "name": "pan"},
+            {"type": "text", "value": "until crispy."},
+            {"type": "text", "value": "Mix"},
+            {"type": "ingredient", "name": "spaghetti", "quantity": None, "unit": None},
+            {"type": "text", "value": "with"},
+            {"type": "ingredient", "name": "bacon", "quantity": None, "unit": None},
+            {"type": "text", "value": "and pour over the"},
             {
-                "type": "ingredient", 
-                "name": "spaghetti", 
-                "quantity": "400", 
-                "unit": "g"
+                "type": "ingredient",
+                "name": "egg mixture",
+                "quantity": None,
+                "unit": None,
             },
+            {"type": "text", "value": "."},
+            {"type": "text", "value": "Season with"},
+            {"type": "ingredient", "name": "salt", "quantity": None, "unit": None},
+            {"type": "text", "value": "and"},
             {
-                "type": "text", 
-                "value": "in boiling water until al dente."
+                "type": "ingredient",
+                "name": "black pepper",
+                "quantity": None,
+                "unit": None,
             },
-            {
-                "type": "text", 
-                "value": "In a"
-            },
-            {
-                "type": "cookware", 
-                "name": "large bowl"
-            },
-            {
-                "type": "text", 
-                "value": ", beat"
-            },
-            {
-                "type": "ingredient", 
-                "name": "eggs", 
-                "quantity": "4", 
-                "unit": None
-            },
-            {
-                "type": "text", 
-                "value": "and mix with"
-            },
-            {
-                "type": "ingredient", 
-                "name": "parmesan cheese", 
-                "quantity": "100", 
-                "unit": "g"
-            },
-            {
-                "type": "text", 
-                "value": "."
-            },
-            {
-                "type": "text", 
-                "value": "Fry"
-            },
-            {
-                "type": "ingredient", 
-                "name": "bacon", 
-                "quantity": "150", 
-                "unit": "g"
-            },
-            {
-                "type": "text", 
-                "value": "in a"
-            },
-            {
-                "type": "cookware", 
-                "name": "pan"
-            },
-            {
-                "type": "text", 
-                "value": "until crispy."
-            },
-            {
-                "type": "text", 
-                "value": "Mix"
-            },
-            {
-                "type": "ingredient", 
-                "name": "spaghetti", 
-                "quantity": None, 
-                "unit": None
-            },
-            {
-                "type": "text", 
-                "value": "with"
-            },
-            {
-                "type": "ingredient", 
-                "name": "bacon", 
-                "quantity": None, 
-                "unit": None
-            },
-            {
-                "type": "text", 
-                "value": "and pour over the"
-            },
-            {
-                "type": "ingredient", 
-                "name": "egg mixture", 
-                "quantity": None, 
-                "unit": None
-            },
-            {
-                "type": "text", 
-                "value": "."
-            },
-            {
-                "type": "text", 
-                "value": "Season with"
-            },
-            {
-                "type": "ingredient", 
-                "name": "salt", 
-                "quantity": None, 
-                "unit": None
-            },
-            {
-                "type": "text", 
-                "value": "and"
-            },
-            {
-                "type": "ingredient", 
-                "name": "black pepper", 
-                "quantity": None, 
-                "unit": None
-            },
-            {
-                "type": "text", 
-                "value": "to taste."
-            },
-            {
-                "type": "text", 
-                "value": "Garnish with"
-            },
-            {
-                "type": "ingredient", 
-                "name": "parsley", 
-                "quantity": None, 
-                "unit": None
-            },
-            {
-                "type": "text", 
-                "value": "."
-            },
-            {
-                "type": "text", 
-                "value": "Serve immediately."
-            }
+            {"type": "text", "value": "to taste."},
+            {"type": "text", "value": "Garnish with"},
+            {"type": "ingredient", "name": "parsley", "quantity": None, "unit": None},
+            {"type": "text", "value": "."},
+            {"type": "text", "value": "Serve immediately."},
         ],
     }
     assert parser.parse_recipe(text) == expected
 
+
 def test_empty_recipe(parser):
     text = ""
-    expected = {
-    }
+    expected = {}
     assert parser.parse_recipe(text) == expected
 
 
@@ -298,22 +179,15 @@ def test_metadata_and_steps(parser):
     Let it cool.
     """
     expected = {
-        "metadata": {
-            "title": "Simple Recipe",
-            "author": "Anonymous"
-        },
+        "metadata": {"title": "Simple Recipe", "author": "Anonymous"},
         "steps": [
-            {
-                "type": "text",
-                "value": "Boil water."
-            },
-            {
-                "type": "text",
-                "value": "Let it cool."
-            }
+            {"type": "text", "value": "Boil water."},
+            {"type": "text", "value": "Let it cool."},
         ],
     }
     assert parser.parse_recipe(text) == expected
+
+
 def test_complex_recipe_with_conditions_and_substitutions(parser):
     text = """
     >>title: Fancy Omelette
@@ -325,16 +199,13 @@ def test_complex_recipe_with_conditions_and_substitutions(parser):
     If @cheese{} is melted, serve immediately.
     """
     expected = {
-        "metadata": {
-            "title": "Fancy Omelette",
-            "servings": "2"
-        },
+        "metadata": {"title": "Fancy Omelette", "servings": "2"},
         "ingredients": [
             {"name": "cheese", "quantity": "50", "unit": "g"},
             {"name": "cheese", "quantity": None, "unit": None},
             {"name": "eggs", "quantity": "3", "unit": None},
             {"name": "eggs", "quantity": None, "unit": None},
-            {"name": "vegan cheese", "quantity": "50", "unit": "g"}
+            {"name": "vegan cheese", "quantity": "50", "unit": "g"},
         ],
         "cookware": ["bowl", "pan"],
         "steps": [
@@ -353,24 +224,38 @@ def test_complex_recipe_with_conditions_and_substitutions(parser):
             {"type": "text", "value": "is cooked, add"},
             {"type": "ingredient", "name": "cheese", "quantity": "50", "unit": "g"},
             {"type": "text", "value": "(or"},
-            {"type": "ingredient", "name": "vegan cheese", "quantity": "50", "unit": "g"},
+            {
+                "type": "ingredient",
+                "name": "vegan cheese",
+                "quantity": "50",
+                "unit": "g",
+            },
             {"type": "text", "value": ") on top."},
             {"type": "text", "value": "If"},
             {"type": "ingredient", "name": "cheese", "quantity": None, "unit": None},
-            {"type": "text", "value": "is melted, serve immediately."}
+            {"type": "text", "value": "is melted, serve immediately."},
         ],
         "conditions": [
-            {"ingredient": "eggs", "condition": "cooked", "action": "add cheese (or vegan cheese ) on top"},
-            {"ingredient": "cheese", "condition": "melted", "action": "serve immediately"}
+            {
+                "ingredient": "eggs",
+                "condition": "cooked",
+                "action": "add cheese (or vegan cheese ) on top",
+            },
+            {
+                "ingredient": "cheese",
+                "condition": "melted",
+                "action": "serve immediately",
+            },
         ],
         "substitutions": [
             {
                 "primary": {"name": "cheese", "quantity": "50", "unit": "g"},
-                "substitute": {"name": "vegan cheese", "quantity": "50", "unit": "g"}
+                "substitute": {"name": "vegan cheese", "quantity": "50", "unit": "g"},
             }
-        ]
+        ],
     }
     assert parser.parse_recipe(text) == expected
+
 
 def test_recipe_with_timer_and_cookware(parser):
     text = """
@@ -381,66 +266,40 @@ def test_recipe_with_timer_and_cookware(parser):
     If @water{} is boiled, steep @tea bag{1} in it for ~{3%minutes}.
     """
     expected = {
-        "metadata": {
-            "title": "Simple Tea",
-            "servings": "1"
-        },
+        "metadata": {"title": "Simple Tea", "servings": "1"},
         "ingredients": [
             {"name": "tea bag", "quantity": "1", "unit": None},
             {"name": "water", "quantity": "200", "unit": "ml"},
-            {"name": "water", "quantity": None, "unit": None}
+            {"name": "water", "quantity": None, "unit": None},
         ],
         "cookware": ["kettle"],
         "steps": [
-            {
-                "type": "text", "value": "Boil"
-            },
-            {
-                "type": "ingredient", "name": "water", "quantity": "200", "unit": "ml"
-            },
-            {
-                "type": "text", "value": "in a"
-            },
-            {
-                "type": "cookware", "name": "kettle"
-            },
-            {
-                "type": "text", "value": "for"
-            },
-            {
-                "type": "timer", "name": "", "duration": "5%minutes"
-            },
-            {
-                "type": "text", "value": "."
-            },
-            {
-                "type": "text", "value": "If"
-            },
-            {
-                "type": "ingredient", "name": "water", "quantity": None, "unit": None
-            },
-            {
-                "type": "text", "value": "is boiled, steep"
-            },
-            {
-                "type": "ingredient", "name": "tea bag", "quantity": "1", "unit": None
-            },
-            {
-                "type": "text", "value": "in it for"
-            },
-            {
-                "type": "timer", "name": "", "duration": "3%minutes"
-            },
-            {
-                "type": "text", "value": "."
-            }
+            {"type": "text", "value": "Boil"},
+            {"type": "ingredient", "name": "water", "quantity": "200", "unit": "ml"},
+            {"type": "text", "value": "in a"},
+            {"type": "cookware", "name": "kettle"},
+            {"type": "text", "value": "for"},
+            {"type": "timer", "name": "", "duration": "5%minutes"},
+            {"type": "text", "value": "."},
+            {"type": "text", "value": "If"},
+            {"type": "ingredient", "name": "water", "quantity": None, "unit": None},
+            {"type": "text", "value": "is boiled, steep"},
+            {"type": "ingredient", "name": "tea bag", "quantity": "1", "unit": None},
+            {"type": "text", "value": "in it for"},
+            {"type": "timer", "name": "", "duration": "3%minutes"},
+            {"type": "text", "value": "."},
         ],
         "timers": [("", "5%minutes"), ("", "3%minutes")],
         "conditions": [
-            {"ingredient": "water", "condition": "boiled", "action": "steep tea bag in it for 3 minutes"}
+            {
+                "ingredient": "water",
+                "condition": "boiled",
+                "action": "steep tea bag in it for 3 minutes",
+            }
         ],
     }
     assert parser.parse_recipe(text) == expected
+
 
 def test_recipe_with_multiple_substitutions(parser):
     text = """
@@ -450,85 +309,60 @@ def test_recipe_with_multiple_substitutions(parser):
     Mix @lettuce{100g} with @olive oil{2tbsp} (or @canola oil{2tbsp}) and @lemon juice{1tbsp} (or @lime juice{1tbsp}).
     """
     expected = {
-        "metadata": {
-            "title": "Versatile Salad",
-            "servings": "2"
-        },
+        "metadata": {"title": "Versatile Salad", "servings": "2"},
         "ingredients": [
             {"name": "canola oil", "quantity": "2", "unit": "tbsp"},
             {"name": "lemon juice", "quantity": "1", "unit": "tbsp"},
             {"name": "lettuce", "quantity": "100", "unit": "g"},
             {"name": "lime juice", "quantity": "1", "unit": "tbsp"},
-            {"name": "olive oil", "quantity": "2", "unit": "tbsp"}
+            {"name": "olive oil", "quantity": "2", "unit": "tbsp"},
         ],
         "steps": [
-            {
-                "type": "text",
-                "value": "Mix"
-            },
-            {
-                "type": "ingredient",
-                "name": "lettuce",
-                "quantity": "100",
-                "unit": "g"
-            },
-            {
-                "type": "text",
-                "value": "with"
-            },
+            {"type": "text", "value": "Mix"},
+            {"type": "ingredient", "name": "lettuce", "quantity": "100", "unit": "g"},
+            {"type": "text", "value": "with"},
             {
                 "type": "ingredient",
                 "name": "olive oil",
                 "quantity": "2",
-                "unit": "tbsp"
+                "unit": "tbsp",
             },
-            {
-                "type": "text",
-                "value": "(or"
-            },
+            {"type": "text", "value": "(or"},
             {
                 "type": "ingredient",
                 "name": "canola oil",
                 "quantity": "2",
-                "unit": "tbsp"
+                "unit": "tbsp",
             },
-            {
-                "type": "text",
-                "value": ") and"
-            },
+            {"type": "text", "value": ") and"},
             {
                 "type": "ingredient",
                 "name": "lemon juice",
                 "quantity": "1",
-                "unit": "tbsp"
+                "unit": "tbsp",
             },
-            {
-                "type": "text",
-                "value": "(or"
-            },
+            {"type": "text", "value": "(or"},
             {
                 "type": "ingredient",
                 "name": "lime juice",
                 "quantity": "1",
-                "unit": "tbsp"
+                "unit": "tbsp",
             },
-            {
-                "type": "text",
-                "value": ")."
-            }
+            {"type": "text", "value": ")."},
         ],
         "substitutions": [
             {
                 "primary": {"name": "olive oil", "quantity": "2", "unit": "tbsp"},
-                "substitute": {"name": "canola oil", "quantity": "2", "unit": "tbsp"}
+                "substitute": {"name": "canola oil", "quantity": "2", "unit": "tbsp"},
             },
             {
                 "primary": {"name": "lemon juice", "quantity": "1", "unit": "tbsp"},
-                "substitute": {"name": "lime juice", "quantity": "1", "unit": "tbsp"}
-            }
-        ]
+                "substitute": {"name": "lime juice", "quantity": "1", "unit": "tbsp"},
+            },
+        ],
     }
     assert parser.parse_recipe(text) == expected
+
 
 def test_recipe_with_multiple_conditions(parser):
     text = """
@@ -539,50 +373,45 @@ def test_recipe_with_multiple_conditions(parser):
     If @ingredient2{} is done, do something else.
     """
     expected = {
-        "metadata": {
-            "title": "Complicated Recipe",
-            "servings": "4"
-        },
+        "metadata": {"title": "Complicated Recipe", "servings": "4"},
         "ingredients": [
             {"name": "ingredient1", "quantity": None, "unit": None},
-            {"name": "ingredient2", "quantity": None, "unit": None}
+            {"name": "ingredient2", "quantity": None, "unit": None},
         ],
         "steps": [
-            {
-                "type": "text",
-                "value": "If"
-            },
+            {"type": "text", "value": "If"},
             {
                 "type": "ingredient",
                 "name": "ingredient1",
                 "quantity": None,
-                "unit": None
+                "unit": None,
             },
-            {
-                "type": "text",
-                "value": "is ready, do something."
-            },
-            {
-                "type": "text",
-                "value": "If"
-            },
+            {"type": "text", "value": "is ready, do something."},
+            {"type": "text", "value": "If"},
             {
                 "type": "ingredient",
                 "name": "ingredient2",
                 "quantity": None,
-                "unit": None
+                "unit": None,
             },
-            {
-                "type": "text",
-                "value": "is done, do something else."
-            }
+            {"type": "text", "value": "is done, do something else."},
         ],
         "conditions": [
-            {"ingredient": "ingredient1", "condition": "ready", "action": "do something"},
-            {"ingredient": "ingredient2", "condition": "done", "action": "do something else"}
+            {
+                "ingredient": "ingredient1",
+                "condition": "ready",
+                "action": "do something",
+            },
+            {
+                "ingredient": "ingredient2",
+                "condition": "done",
+                "action": "do something else",
+            },
         ],
     }
     assert parser.parse_recipe(text) == expected
+
+
 def test_recipe_with_conditions_substitutions_and_timers(parser):
     text = """
     >>title: Full-Featured Recipe
@@ -593,115 +422,47 @@ def test_recipe_with_conditions_substitutions_and_timers(parser):
     Use @butter{20g} (or @oil{20g}) for flavor.
     """
     expected = {
-        "metadata": {
-            "title": "Full-Featured Recipe",
-            "servings": "2"
-        },
+        "metadata": {"title": "Full-Featured Recipe", "servings": "2"},
         "ingredients": [
             {"name": "butter", "quantity": "20", "unit": "g"},
             {"name": "oil", "quantity": "20", "unit": "g"},
             {"name": "rice", "quantity": "200", "unit": "g"},
-            {"name": "rice", "quantity": None, "unit": None}
+            {"name": "rice", "quantity": None, "unit": None},
         ],
         "steps": [
-            {
-                "type": "text",
-                "value": "Cook"
-            },
-            {
-                "type": "ingredient",
-                "name": "rice",
-                "quantity": "200",
-                "unit": "g"
-            },
-            {
-                "type": "text",
-                "value": "in water for"
-            },
-            {
-                "type": "timer",
-                "name": "",
-                "duration": "15%minutes"
-            },
-            {
-                "type": "text",
-                "value": "."
-            },
-            {
-                "type": "text",
-                "value": "If"
-            },
-            {
-                "type": "ingredient",
-                "name": "rice",
-                "quantity": None,
-                "unit": None
-            },
-            {
-                "type": "text",
-                "value": "is cooked, let it rest for"
-            },
-            {
-                "type": "timer",
-                "name": "",
-                "duration": "5%minutes"
-            },
-            {
-                "type": "text",
-                "value": "."
-            },
-            {
-                "type": "text",
-                "value": "Use"
-            },
-            {
-                "type": "ingredient",
-                "name": "butter",
-                "quantity": "20",
-                "unit": "g"
-            },
-            {
-                "type": "text",
-                "value": "(or"
-            },
-            {
-                "type": "ingredient",
-                "name": "oil",
-                "quantity": "20",
-                "unit": "g"
-            },
-            {
-                "type": "text",
-                "value": ") for flavor."
-            }
+            {"type": "text", "value": "Cook"},
+            {"type": "ingredient", "name": "rice", "quantity": "200", "unit": "g"},
+            {"type": "text", "value": "in water for"},
+            {"type": "timer", "name": "", "duration": "15%minutes"},
+            {"type": "text", "value": "."},
+            {"type": "text", "value": "If"},
+            {"type": "ingredient", "name": "rice", "quantity": None, "unit": None},
+            {"type": "text", "value": "is cooked, let it rest for"},
+            {"type": "timer", "name": "", "duration": "5%minutes"},
+            {"type": "text", "value": "."},
+            {"type": "text", "value": "Use"},
+            {"type": "ingredient", "name": "butter", "quantity": "20", "unit": "g"},
+            {"type": "text", "value": "(or"},
+            {"type": "ingredient", "name": "oil", "quantity": "20", "unit": "g"},
+            {"type": "text", "value": ") for flavor."},
         ],
-        "timers": [
-            ("", "15%minutes"),
-            ("", "5%minutes")
-        ],
+        "timers": [("", "15%minutes"), ("", "5%minutes")],
         "conditions": [
             {
                 "ingredient": "rice",
                 "condition": "cooked",
-                "action": "let it rest for 5 minutes"
+                "action": "let it rest for 5 minutes",
             }
         ],
         "substitutions": [
             {
-                "primary": {
-                    "name": "butter",
-                    "quantity": "20",
-                    "unit": "g"
-                },
-                "substitute": {
-                    "name": "oil",
-                    "quantity": "20",
-                    "unit": "g"
-                }
+                "primary": {"name": "butter", "quantity": "20", "unit": "g"},
+                "substitute": {"name": "oil", "quantity": "20", "unit": "g"},
             }
-        ]
+        ],
     }
     assert parser.parse_recipe(text) == expected
+
 
 def test_recipe_with_nested_conditions(parser):
     text = """
@@ -713,81 +474,43 @@ def test_recipe_with_nested_conditions(parser):
     If @shredded chicken{} is ready, use it in tacos.
     """
     expected = {
-        "metadata": {
-            "title": "Nested Conditions Recipe",
-            "servings": "3"
-        },
-        "comments": [
-            {'type': 'comment', 'name': 'consider it'}
-        ],
+        "metadata": {"title": "Nested Conditions Recipe", "servings": "3"},
+        "comments": [{"type": "comment", "name": "consider it"}],
         "ingredients": [
             {"name": "chicken", "quantity": None, "unit": None},
-            {"name": "shredded chicken", "quantity": None, "unit": None}
+            {"name": "shredded chicken", "quantity": None, "unit": None},
         ],
         "steps": [
+            {"type": "text", "value": "If"},
+            {"type": "ingredient", "name": "chicken", "quantity": None, "unit": None},
+            {"type": "text", "value": "is marinated, cook it."},
+            {"type": "text", "value": "If"},
+            {"type": "ingredient", "name": "chicken", "quantity": None, "unit": None},
+            {"type": "text", "value": "is cooked, shred it."},
+            {"type": "text", "value": "If"},
             {
-                "type": "text", 
-                "value": "If"
+                "type": "ingredient",
+                "name": "shredded chicken",
+                "quantity": None,
+                "unit": None,
             },
-            {
-                "type": "ingredient", 
-                "name": "chicken", 
-                "quantity": None, 
-                "unit": None
-            },
-            {
-                "type": "text", 
-                "value": "is marinated, cook it."
-            },
-            {
-                "type": "text", 
-                "value": "If"
-            },
-            {
-                "type": "ingredient", 
-                "name": "chicken", 
-                "quantity": None, 
-                "unit": None
-            },
-            {
-                "type": "text", 
-                "value": "is cooked, shred it."
-            },
-            {
-                "type": "text", 
-                "value": "If"
-            },
-            {
-                "type": "ingredient", 
-                "name": "shredded chicken", 
-                "quantity": None, 
-                "unit": None
-            },
-            {
-                "type": "text", 
-                "value": "is ready, use it in tacos."
-            }
+            {"type": "text", "value": "is ready, use it in tacos."},
         ],
         "conditions": [
+            {"ingredient": "chicken", "condition": "marinated", "action": "cook it"},
+            {"ingredient": "chicken", "condition": "cooked", "action": "shred it"},
             {
-                "ingredient": "chicken", 
-                "condition": "marinated", 
-                "action": "cook it"
+                "ingredient": "shredded chicken",
+                "condition": "ready",
+                "action": "use it in tacos",
             },
-            {
-                "ingredient": "chicken", 
-                "condition": "cooked", 
-                "action": "shred it"
-            },
-            {
-                "ingredient": "shredded chicken", 
-                "condition": "ready", 
-                "action": "use it in tacos"
-            }
         ],
     }
     result = parser.parse_recipe(text)
-    assert result == expected, f"Failed. Result: {result['comments']}, Expected: {expected['comments']}"
+    assert (
+        result == expected
+    ), f"Failed. Result: {result['comments']}, Expected: {expected['comments']}"
+
 
 def test_custom(parser):
     text = """
@@ -801,117 +524,48 @@ def test_custom(parser):
     Boil @eggs{2} for ~eggs{3%minutes}.
     """
     expected = {
-        'metadata': {
-            'source': 'https://example.com',
+        "metadata": {
+            "source": "https://example.com",
         },
-        'ingredients': [
-            {'name': 'bacon strips', 'quantity': '1', 'unit': 'kg'},
-            {'name': 'eggs', 'quantity': '2', 'unit': None},
-            {'name': 'milk', 'quantity': '4', 'unit': 'cup'},
-            {'name': 'potato', 'quantity': '2', 'unit': None},
-            {'name': 'syrup', 'quantity': '1/2', 'unit': 'tbsp'},
+        "ingredients": [
+            {"name": "bacon strips", "quantity": "1", "unit": "kg"},
+            {"name": "eggs", "quantity": "2", "unit": None},
+            {"name": "milk", "quantity": "4", "unit": "cup"},
+            {"name": "potato", "quantity": "2", "unit": None},
+            {"name": "syrup", "quantity": "1/2", "unit": "tbsp"},
         ],
-        'cookware': ['pot'],
-        'steps': [
+        "cookware": ["pot"],
+        "steps": [
+            {"type": "text", "value": "Poke holes in"},
+            {"type": "ingredient", "name": "potato", "quantity": "2", "unit": None},
+            {"type": "text", "value": "."},
+            {"type": "text", "value": "Place"},
             {
-                'type': 'text',
-                'value': 'Poke holes in'
+                "type": "ingredient",
+                "name": "bacon strips",
+                "quantity": "1",
+                "unit": "kg",
             },
-            {
-                'type': 'ingredient',
-                'name': 'potato',
-                'quantity': '2',
-                'unit': None
-            },
-            {
-                'type': 'text',
-                'value': '.'
-            },
-            {
-                'type': 'text',
-                'value': 'Place'
-            },
-            {
-                'type': 'ingredient',
-                'name': 'bacon strips',
-                'quantity': '1',
-                'unit': 'kg'
-            },
-            {
-                'type': 'text',
-                'value': 'on a baking sheet and glaze with'
-            },
-            {
-                'type': 'ingredient',
-                'name': 'syrup',
-                'quantity': '1/2',
-                'unit': 'tbsp'
-            },
-            {
-                'type': 'text',
-                'value': '.'
-            },
-            {
-                'type': 'text',
-                'value': 'Slowly add'
-            },
-            {
-                'type': 'ingredient',
-                'name': 'milk',
-                'quantity': '4',
-                'unit': 'cup'
-            },
-            {
-                'type': 'text',
-                'value': ', keep mixing'
-            },
-            {
-                'type': 'text',
-                'value': 'Place the potatoes into a'
-            },
-            {
-                'type': 'cookware',
-                'name': 'pot'
-            },
-            {
-                'type': 'text',
-                'value': '.'
-            },
-            {
-                'type': 'text',
-                'value': 'Boil'
-            },
-            {
-                'type': 'ingredient',
-                'name': 'eggs',
-                'quantity': '2',
-                'unit': None
-            },
-            {
-                'type': 'text',
-                'value': 'for'
-            },
-            {
-                'type': 'timer',
-                'name': 'eggs',
-                'duration': '3%minutes'
-            },
-            {
-                'type': 'text',
-                'value': '.'
-            }
+            {"type": "text", "value": "on a baking sheet and glaze with"},
+            {"type": "ingredient", "name": "syrup", "quantity": "1/2", "unit": "tbsp"},
+            {"type": "text", "value": "."},
+            {"type": "text", "value": "Slowly add"},
+            {"type": "ingredient", "name": "milk", "quantity": "4", "unit": "cup"},
+            {"type": "text", "value": ", keep mixing"},
+            {"type": "text", "value": "Place the potatoes into a"},
+            {"type": "cookware", "name": "pot"},
+            {"type": "text", "value": "."},
+            {"type": "text", "value": "Boil"},
+            {"type": "ingredient", "name": "eggs", "quantity": "2", "unit": None},
+            {"type": "text", "value": "for"},
+            {"type": "timer", "name": "eggs", "duration": "3%minutes"},
+            {"type": "text", "value": "."},
         ],
-        'timers': [('eggs', '3%minutes')],
-        'comments': [
-            {
-                'type': 'comment',
-                'name': 'This is a comment'
-            },
-            {
-                'type': 'comment',
-                'name': 'TODO change units to litres'
-            }
-        ]
+        "timers": [("eggs", "3%minutes")],
+        "comments": [
+            {"type": "comment", "name": "This is a comment"},
+            {"type": "comment", "name": "TODO change units to litres"},
+        ],
     }
     result = parser.parse_recipe(text)
     assert result == expected
