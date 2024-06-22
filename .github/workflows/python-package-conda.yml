@@ -10,12 +10,12 @@ jobs:
         os: [ubuntu-latest, macos-latest, windows-latest]
         python-version: ['3.8', '3.9', '3.10', '3.11']
     steps:
-    - uses: actions/checkout@v4  # Ensure the repo is checked out
-    - name: Set up Python ${{ matrix.python-version }}  # Set up the Python version
+    - uses: actions/checkout@v4
+    - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v3
       with:
         python-version: ${{ matrix.python-version }}
-    - name: Set up Conda on Linux/macOS  # Set up Conda based on OS
+    - name: Set up Conda on Linux/macOS
       if: runner.os != 'Windows'
       run: |
         if [ $RUNNER_OS = "Linux" ]; then
@@ -35,7 +35,7 @@ jobs:
       if: runner.os == 'Windows'
       run: |
         choco install miniconda3
-        echo "C:\\ProgramData\\Miniconda3" >> $GITHUB_PATH
+        $env:Path += ";C:\tools\miniconda3\Scripts;C:\tools\miniconda3"
         conda init powershell
         conda config --set auto_activate_base false
     - name: Create and activate environment
@@ -45,14 +45,14 @@ jobs:
     - name: Install app with pip
       run: |
         pip install -e .
-    - name: Lint with flake8  # Run linting with flake8
+    - name: Lint with flake8
       run: |
         conda install flake8 -y
         # stop the build if there are Python syntax errors or undefined names
         flake8 --count --select=E9,F63,F7,F82 --show-source --statistics
         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
         flake8 --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
-    - name: Test with pytest  # Run tests with pytest
+    - name: Test with pytest
       run: |
         conda install pytest -y
         pytest
