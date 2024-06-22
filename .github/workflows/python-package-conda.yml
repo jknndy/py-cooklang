@@ -21,21 +21,27 @@ jobs:
           wget -O miniconda.sh https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
           bash miniconda.sh -b -p $HOME/miniconda
           echo $HOME/miniconda/bin >> $GITHUB_PATH
+          $HOME/miniconda/bin/conda init bash
+          source $HOME/.bashrc
         elif [[ $RUNNER_OS == "macOS" ]]; then
           wget -O miniconda.sh https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-x86_64.sh
           bash miniconda.sh -b -p $HOME/miniconda
           echo $HOME/miniconda/bin >> $GITHUB_PATH
+          $HOME/miniconda/bin/conda init bash
+          source $HOME/.bash_profile
         elif [[ $RUNNER_OS == "Windows" ]]; then
           choco install miniconda3
-          echo "C:\\ProgramData\\Miniconda3\\Scripts" >> $GITHUB_PATH
+          echo "C:\\ProgramData\\Miniconda3" >> $GITHUB_PATH
+          powershell -Command "conda init powershell"
+          powershell -Command "conda config --set auto_activate_base false"
+          powershell -Command "conda create --name test-env python=${{ matrix.python-version }} -y"
+          powershell -Command "conda activate test-env"
         fi
-        # Initialize Conda
-        $HOME/miniconda/bin/conda init bash
-        source $HOME/.bashrc
-    - name: Create and activate environment
+    - name: Create and activate environment (Linux/macOS)
+      if: runner.os != 'Windows'
       run: |
         conda create --name test-env python=${{ matrix.python-version }} -y
-        conda activate test-env
+        source activate test-env
     - name: Lint with flake8  # Run linting with flake8
       run: |
         conda install flake8 -y
