@@ -111,8 +111,8 @@ class CooklangParser:
         return sorted(ingredients, key=lambda x: x['name'])
 
     def extract_cookware(self, text):
-        multi_word_cookware = re.findall(r'#([\w\s-]+)\{\}', text)
-        single_word_cookware = re.findall(r'#(\w+)(?![\w\s-]*\{\})', text)
+        multi_word_cookware = re.findall(r'#([^\s][\w\s-]*[^\s])\{\}', text)
+        single_word_cookware = re.findall(r'#(\w+)\b(?![\w\s-]*\{\})', text)
 
         cookware = list(dict.fromkeys(multi_word_cookware + single_word_cookware))
         return sorted(cookware)
@@ -124,7 +124,7 @@ class CooklangParser:
             if not line or line.startswith('>>'):
                 continue
             step = []
-            matches = re.finditer(r'(@[\w\s-]+\{[^}]*\}|#[\w\s-]+\{\}|#[\w]+|~[\w\s-]*\{[^}]*\}|~\{[^}]*\}|~[\w\s-]*\{[\d\s%a-zA-Z°C]+\}|~[\w\s-]*[\d\s%a-zA-Z°C]+\{[^}]*\}|\+[\w\s-]+\{\})', line)
+            matches = re.finditer(r'(@[\w\s-]+\{[^}]*\}|#[\w\s-]+\{\}|#[\w]+|~[\w\s-]*\{[^}]*\}|~\{[^}]*\}|\+[\w\s-]+\{\})', line)
             last_end = 0
             for match in matches:
                 if match.start() > last_end:
@@ -139,17 +139,28 @@ class CooklangParser:
                     'type': 'text',
                     'value': line[last_end:].strip()
                 })
-            steps.append(step)
+            steps.extend(step)
         return steps
 
     def parse_step_component(self, component):
         if component.startswith('@'):
-            name, details = re.match(r'@([\w\s-]+)\{([^}]*)\}', component).groups()
-            quantity, unit = parse_quantity_unit(details.strip())
-            return {'type': 'ingredient', 'name': name.strip(), 'quantity': quantity, 'unit': unit}
+            match = re.match(r'@([\w\s&-]+)\{([^}]*)\}', component)
+            if match:
+                name, details = match.groups()
+                quantity, unit = parse_quantity_unit(details.strip())
+                return {'type': 'ingredient', 'name': name.strip(), 'quantity': quantity, 'unit': unit}
         elif component.startswith('#'):
-            name = re.match(r'#([\w\s]+)', component).group(1)
-            return {'type': 'cookware', 'name': name.strip()}
+            name_match = re.match(r'#([^\s][\w\s-]*[^\s])\{\}', component)
+            if name_match:
+                name = name_match.group(1)
+                return {'type': 'cookware', 'name': name.strip()}
+            else:
+                name_match = re.match(r'#(\w+)', component)
+                if name_match:
+                    name = name_match.group(1)
+                    return {'type': 'cookware', 'name': name.strip()}
+                else:
+                    return {'type': 'text', 'value': component}
         elif component.startswith('~'):
             duration_match = re.match(r'~([\w\s°-]*)\{([^}]*)\}', component)
             if duration_match:
@@ -164,8 +175,14 @@ class CooklangParser:
 
             raise ValueError(f"Invalid timer format: {component}")
         elif component.startswith('+'):
-            name = re.match(r'\+([\w\s]+)\{\}', component).group(1)
-            return {'type': 'note', 'name': name.strip()}
+            match = re.match(r'\+([\w\s&-]+)\{\}', component)
+            if match:
+                name = match.group(1)
+                return {'type': 'note', 'name': name.strip()}
+            else:
+                return {'type': 'text', 'value': component}
+        else:
+            return {'type': 'text', 'value': component}
 
     def extract_timers(self, text):
         timers = re.findall(r'~([\w\s@#-]*)\{(\d+%?[a-zA-Z\s]+)\}', text)
