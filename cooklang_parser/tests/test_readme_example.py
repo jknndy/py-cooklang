@@ -68,7 +68,6 @@ def test_parse_recipe():
                 {'type': 'text', 'value': 'for ~3%minutes.'}
             ],
         ],
-        'timers': [],
         'conditions': [
             {
                 'ingredient': 'Egg',
@@ -82,8 +81,6 @@ def test_parse_recipe():
                 'type': 'comment',
             },
         ],
-        'images': [],
-        'substitutions': [],
     }
 
     assert parsed_recipe == expected, f"Failed. Result: {parsed_recipe}, Expected: {expected}"

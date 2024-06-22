@@ -5,17 +5,44 @@ class CooklangParser:
     def parse_recipe(self, recipe_text):
         comments = self.extract_comments(recipe_text)
         recipe_text = self.remove_comments(recipe_text)
-        return {
-            "metadata": self.extract_metadata(recipe_text),
-            "ingredients": self.extract_ingredients(recipe_text),
-            "cookware": self.extract_cookware(recipe_text),
-            "steps": self.extract_steps(recipe_text),
-            "timers": self.extract_timers(recipe_text),
-            "conditions": self.extract_conditions(recipe_text),
-            "substitutions": self.extract_ingredient_substitutions(recipe_text),
-            "comments": comments,
-            "images": self.extract_images(recipe_text)
-        }
+        
+        parsed_recipe = {}
+        metadata = self.extract_metadata(recipe_text)
+        if metadata:
+            parsed_recipe["metadata"] = metadata
+
+        ingredients = self.extract_ingredients(recipe_text)
+        if ingredients:
+            parsed_recipe["ingredients"] = ingredients
+
+        cookware = self.extract_cookware(recipe_text)
+        if cookware:
+            parsed_recipe["cookware"] = cookware
+
+        steps = self.extract_steps(recipe_text)
+        if steps:
+            parsed_recipe["steps"] = steps
+
+        timers = self.extract_timers(recipe_text)
+        if timers:
+            parsed_recipe["timers"] = timers
+
+        conditions = self.extract_conditions(recipe_text)
+        if conditions:
+            parsed_recipe["conditions"] = conditions
+
+        substitutions = self.extract_ingredient_substitutions(recipe_text)
+        if substitutions:
+            parsed_recipe["substitutions"] = substitutions
+
+        if comments:
+            parsed_recipe["comments"] = comments
+
+        images = self.extract_images(recipe_text)
+        if images:
+            parsed_recipe["images"] = images
+
+        return parsed_recipe
 
     def remove_comments(self, text):
         text = re.sub(r'^\s*--.*$', '', text, flags=re.MULTILINE)

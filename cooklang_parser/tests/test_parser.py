@@ -20,7 +20,6 @@ def test_parse_recipe_full(parser):
     Use @butter{50g} (or @margarine{50g}) for frying.
     """
     expected = {
-        "comments": [],
         "metadata": {"title": "Spaghetti Bolognese", "servings": "4"},
         "ingredients": [
             {"name": "butter", "quantity": "50", "unit": "g"},
@@ -96,7 +95,6 @@ def test_complex_recipe(parser):
     """
 
     expected = {
-        "comments": [],
         "metadata": {
             "title": "Spaghetti Carbonara",
             "servings": "4",
@@ -115,7 +113,6 @@ def test_complex_recipe(parser):
             {"name": "spaghetti", "quantity": None, "unit": None}
         ],
         "cookware": ["large bowl", "pan"],
-        "images": [],
         "steps": [
             [
                 {"type": "text", "value": "Cook"},
@@ -163,24 +160,12 @@ def test_complex_recipe(parser):
                 {"type": "text", "value": "Serve immediately."}
             ]
         ],
-        "timers": [],
-        "conditions": [],
-        "substitutions": []
     }
     assert parser.parse_recipe(text) == expected
 
 def test_empty_recipe(parser):
     text = ""
     expected = {
-        "comments": [],
-        "metadata": {},
-        "ingredients": [],
-        "cookware": [],
-        "images": [],
-        "steps": [],
-        "timers": [],
-        "conditions": [],
-        "substitutions": []
     }
     assert parser.parse_recipe(text) == expected
 
@@ -194,14 +179,10 @@ def test_metadata_and_steps(parser):
     Let it cool.
     """
     expected = {
-        "comments": [],
         "metadata": {
             "title": "Simple Recipe",
             "author": "Anonymous"
         },
-        "ingredients": [],
-        "cookware": [],
-        "images": [],
         "steps": [
             [
                 {"type": "text", "value": "Boil water."}
@@ -210,9 +191,6 @@ def test_metadata_and_steps(parser):
                 {"type": "text", "value": "Let it cool."}
             ]
         ],
-        "timers": [],
-        "conditions": [],
-        "substitutions": []
     }
     assert parser.parse_recipe(text) == expected
 def test_complex_recipe_with_conditions_and_substitutions(parser):
@@ -226,7 +204,6 @@ def test_complex_recipe_with_conditions_and_substitutions(parser):
     If @cheese{} is melted, serve immediately.
     """
     expected = {
-        "comments": [],
         "metadata": {
             "title": "Fancy Omelette",
             "servings": "2"
@@ -239,7 +216,6 @@ def test_complex_recipe_with_conditions_and_substitutions(parser):
             {"name": "vegan cheese", "quantity": "50", "unit": "g"}
         ],
         "cookware": ["bowl", "pan"],
-        "images": [],
         "steps": [
             [
                 {"type": "text", "value": "Whisk"},
@@ -270,7 +246,6 @@ def test_complex_recipe_with_conditions_and_substitutions(parser):
                 {"type": "text", "value": "is melted, serve immediately."}
             ]
         ],
-        "timers": [],
         "conditions": [
             {"ingredient": "eggs", "condition": "cooked", "action": "add cheese (or vegan cheese ) on top"},
             {"ingredient": "cheese", "condition": "melted", "action": "serve immediately"}
@@ -293,7 +268,6 @@ def test_recipe_with_timer_and_cookware(parser):
     If @water{} is boiled, steep @tea bag{1} in it for ~{3%minutes}.
     """
     expected = {
-        "comments": [],
         "metadata": {
             "title": "Simple Tea",
             "servings": "1"
@@ -304,7 +278,6 @@ def test_recipe_with_timer_and_cookware(parser):
             {"name": "water", "quantity": None, "unit": None}
         ],
         "cookware": ["kettle"],
-        "images": [],
         "steps": [
             [
                 {"type": "text", "value": "Boil"},
@@ -329,7 +302,6 @@ def test_recipe_with_timer_and_cookware(parser):
         "conditions": [
             {"ingredient": "water", "condition": "boiled", "action": "steep tea bag in it for 3 minutes"}
         ],
-        "substitutions": []
     }
     assert parser.parse_recipe(text) == expected
 
@@ -341,7 +313,6 @@ def test_recipe_with_multiple_substitutions(parser):
     Mix @lettuce{100g} with @olive oil{2tbsp} (or @canola oil{2tbsp}) and @lemon juice{1tbsp} (or @lime juice{1tbsp}).
     """
     expected = {
-        "comments": [],
         "metadata": {
             "title": "Versatile Salad",
             "servings": "2"
@@ -353,8 +324,6 @@ def test_recipe_with_multiple_substitutions(parser):
             {"name": "lime juice", "quantity": "1", "unit": "tbsp"},
             {"name": "olive oil", "quantity": "2", "unit": "tbsp"}
         ],
-        "cookware": [],
-        "images": [],
         "steps": [
             [
                 {"type": "text", "value": "Mix"},
@@ -370,8 +339,6 @@ def test_recipe_with_multiple_substitutions(parser):
                 {"type": "text", "value": ")."}
             ]
         ],
-        "timers": [],
-        "conditions": [],
         "substitutions": [
             {
                 "primary": {"name": "olive oil", "quantity": "2", "unit": "tbsp"},
@@ -394,7 +361,6 @@ def test_recipe_with_multiple_conditions(parser):
     If @ingredient2{} is done, do something else.
     """
     expected = {
-        "comments": [],
         "metadata": {
             "title": "Complicated Recipe",
             "servings": "4"
@@ -403,8 +369,6 @@ def test_recipe_with_multiple_conditions(parser):
             {"name": "ingredient1", "quantity": None, "unit": None},
             {"name": "ingredient2", "quantity": None, "unit": None}
         ],
-        "cookware": [],
-        "images": [],
         "steps": [
             [
                 {"type": "text", "value": "If"},
@@ -417,12 +381,10 @@ def test_recipe_with_multiple_conditions(parser):
                 {"type": "text", "value": "is done, do something else."}
             ]
         ],
-        "timers": [],
         "conditions": [
             {"ingredient": "ingredient1", "condition": "ready", "action": "do something"},
             {"ingredient": "ingredient2", "condition": "done", "action": "do something else"}
         ],
-        "substitutions": []
     }
     assert parser.parse_recipe(text) == expected
 
@@ -436,7 +398,6 @@ def test_recipe_with_conditions_substitutions_and_timers(parser):
     Use @butter{20g} (or @oil{20g}) for flavor.
     """
     expected = {
-        "comments": [],
         "metadata": {
             "title": "Full-Featured Recipe",
             "servings": "2"
@@ -447,8 +408,6 @@ def test_recipe_with_conditions_substitutions_and_timers(parser):
             {"name": "rice", "quantity": "200", "unit": "g"},
             {"name": "rice", "quantity": None, "unit": None}
         ],
-        "cookware": [],
-        "images": [],
         "steps": [
             [
                 {"type": "text", "value": "Cook"},
@@ -506,8 +465,6 @@ def test_recipe_with_nested_conditions(parser):
             {"name": "chicken", "quantity": None, "unit": None},
             {"name": "shredded chicken", "quantity": None, "unit": None}
         ],
-        "cookware": [],
-        "images": [],
         "steps": [
             [
                 {"type": "text", "value": "If"},
@@ -525,13 +482,11 @@ def test_recipe_with_nested_conditions(parser):
                 {"type": "text", "value": "is ready, use it in tacos."}
             ]
         ],
-        "timers": [],
         "conditions": [
             {"ingredient": "chicken", "condition": "marinated", "action": "cook it"},
             {"ingredient": "chicken", "condition": "cooked", "action": "shred it"},
             {"ingredient": "shredded chicken", "condition": "ready", "action": "use it in tacos"}
         ],
-        "substitutions": []
     }
     result = parser.parse_recipe(text)
     assert result == expected, f"Failed. Result: {result['comments']}, Expected: {expected['comments']}"
@@ -559,7 +514,6 @@ def test_custom(parser):
             {'name': 'syrup', 'quantity': '1/2', 'unit': 'tbsp'},
         ],
         'cookware': ['pot'],
-        'images': [],
         'steps': [
             [
                 {'type': 'text', 'value': 'Poke holes in'},
@@ -592,8 +546,6 @@ def test_custom(parser):
             ]
         ],
         'timers': [('eggs', '3%minutes')],
-        'conditions': [],
-        'substitutions': [],
         'comments': [
             {'type': 'comment', 'name': 'This is a comment'},
             {'type': 'comment', 'name': 'TODO change units to litres'}
