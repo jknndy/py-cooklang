@@ -38,10 +38,16 @@ jobs:
         $env:Path += ";C:\tools\miniconda3\Scripts;C:\tools\miniconda3"
         conda init powershell
         conda config --set auto_activate_base false
-    - name: Create and activate environment
+    - name: Create and activate environment on Linux/macOS
+      if: runner.os != 'Windows'
       run: |
         conda create --name test-env python=${{ matrix.python-version }} -y
-        source activate test-env || conda activate test-env
+        source $HOME/miniconda/bin/activate test-env
+    - name: Create and activate environment on Windows
+      if: runner.os == 'Windows'
+      run: |
+        conda create --name test-env python=${{ matrix.python-version }} -y
+        conda activate test-env
     - name: Install app with pip
       run: |
         pip install -e .
